@@ -65,41 +65,17 @@ router.post(
 router.post('/register', async (req, res) => {
   console.log("🔥 REGISTER ROUTE HIT");
 
-  const { email, password } = req.body;
-
   try {
-    if (!email || !password) {
-      return res.status(400).json({ error: "Missing email or password" });
-    }
+    // 🔥 TEST DB CONNECTION ONLY
+    const result = await query(`SELECT NOW()`);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    console.log("🚀 ABOUT TO INSERT");
-
-    const result = await query(
-      `INSERT INTO users (email, password)
-       VALUES ($1, $2)
-       RETURNING *`,
-      [email, hashedPassword]
-    );
-
-    console.log("✅ INSERT SUCCESS");
-
-    const user = result.rows[0];
-
-    const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    return res.status(201).json({ token });
+    return res.json({
+      message: "DB WORKS",
+      time: result.rows[0]
+    });
 
   } catch (error) {
-    console.error("💥 REGISTER ERROR:", error);
+    console.error("💥 DB CONNECTION ERROR:", error);
 
     return res.status(500).json({
       error: error.message
