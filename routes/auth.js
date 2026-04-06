@@ -54,6 +54,7 @@ router.post(
       );
 
       return res.json({ token });
+
     } catch (error) {
       console.error('LOGIN ERROR:', error);
       return res.status(500).json({ error: 'Server error' });
@@ -62,7 +63,7 @@ router.post(
 );
 
 //
-// ✅ REGISTER (FINAL FIXED VERSION)
+// ✅ REGISTER
 //
 router.post('/register', async (req, res) => {
   console.log("REGISTER HIT:", req.body);
@@ -70,7 +71,6 @@ router.post('/register', async (req, res) => {
   try {
     const { email, password, name, role } = req.body;
 
-    // basic validation
     if (!email || !password) {
       return res.status(400).json({ error: "Missing email or password" });
     }
@@ -90,8 +90,8 @@ router.post('/register', async (req, res) => {
       [
         email,
         hashedPassword,
-        name || 'User',   // ✅ prevents null crash
-        role || 'user',   // ✅ prevents null crash
+        name || 'User',
+        role || 'user',
         companyId,
         trialEnds
       ]
@@ -115,9 +115,12 @@ router.post('/register', async (req, res) => {
     return res.status(201).json({ token });
 
   } catch (error) {
-    console.error('REGISTER ERROR FULL:', error.message);
-    console.error(error);
-    return res.status(500).json({ error: error.message });
+    console.error('REGISTER ERROR FULL:', error);
+
+    return res.status(500).json({
+      error: error.message,
+      detail: error
+    });
   }
 });
 
@@ -156,6 +159,7 @@ router.post('/apply-code', authenticateToken, async (req, res) => {
     );
 
     res.json({ token });
+
   } catch (error) {
     console.error('APPLY CODE ERROR:', error);
     res.status(500).json({ error: 'Server error' });
