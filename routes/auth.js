@@ -62,19 +62,18 @@ router.post(
 );
 
 //
-// ✅ REGISTER (FIXED WITH COMPANY + TRIAL)
+// ✅ REGISTER
 //
-console.log("REGISTER HIT", req.body);
 router.post('/register', async (req, res) => {
+  console.log("REGISTER HIT:", req.body); // ✅ DEBUG (correct place)
+
   try {
     const { email, password, name, role } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ CREATE UNIQUE COMPANY ID
     const companyId = uuidv4();
 
-    // ✅ CREATE 7 DAY TRIAL
     const trialEnds = new Date();
     trialEnds.setDate(trialEnds.getDate() + 7);
 
@@ -103,7 +102,7 @@ router.post('/register', async (req, res) => {
     return res.status(201).json({ token });
   } catch (error) {
     console.error('REGISTER ERROR:', error);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: error.message }); // ✅ show real error
   }
 });
 
