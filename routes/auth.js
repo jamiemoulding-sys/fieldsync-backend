@@ -64,6 +64,7 @@ router.post(
 //
 // ✅ REGISTER (FIXED WITH COMPANY + TRIAL)
 //
+console.log("REGISTER HIT", req.body);
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name, role } = req.body;
