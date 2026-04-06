@@ -1,3 +1,4 @@
+console.log("🔥 REAL BACKEND VERSION");
 console.log('🔥 AUTH ROUTES LOADED');
 
 const express = require('express');
