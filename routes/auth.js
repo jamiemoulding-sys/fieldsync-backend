@@ -62,14 +62,12 @@ router.post(
 //
 // ✅ REGISTER (SAFE VERSION)
 //
-router.post('/register', async (req, res) => {
-  try {
-    const result = await query(`SELECT NOW()`);
-    return res.json({ success: true, time: result.rows[0] });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+const result = await query(
+  `INSERT INTO users (email, password, name)
+   VALUES ($1, $2, $3)
+   RETURNING *`,
+  [email, hashedPassword, 'User']
+);
   
 
 //
